@@ -26,6 +26,12 @@ Returned value is ignored in this case.
 If you are writing a performance demanding reducer,
 please use this mutation trick and define the hottest property as
 the first one in your initial state for faster checking.
+
+If you don't want to update state, please make sure you action
+returns something
+[falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy)
+
+
 To work with state directly you can do
 ```js
 // to update the state
