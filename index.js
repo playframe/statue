@@ -29,8 +29,8 @@
 
   // If you don't want to update state, please make sure you action
   // returns something
-  // [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy) or
-  // the same state is was passed to it
+  // [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy)
+  // or the same state is was passed to it
 
   // To work with state directly you can do
   // ```js
