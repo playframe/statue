@@ -167,7 +167,7 @@ easily detected
           # recursevely currying down
           inject_state y
         else
-          if not mutated and y isnt cloned and not y.then # not promise
+          if y and not mutated and y isnt cloned and not y.then # not promise
             save_state assign cloned, y
           y
 

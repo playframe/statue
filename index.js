@@ -181,7 +181,7 @@ module.exports = statue = (state_actions, delayed, level_up) => {
         // recursevely currying down
         return inject_state(y);
       } else {
-        if (!mutated && y !== cloned && !y.then) { // not promise
+        if (y && !mutated && y !== cloned && !y.then) { // not promise
           save_state(assign(cloned, y));
         }
         return y;
