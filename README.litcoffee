@@ -30,7 +30,7 @@ the first one in your initial state for faster checking.
 If you don't want to update state, please make sure you action
 returns something
 [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy)
-or the same state is was passed to it
+or the same state that was passed to it
 
 
 To work with state directly you can do
@@ -105,32 +105,46 @@ parent update
       actions = state_actions._
       _state = state_actions # _closure
       _scheduled = false # _closure
+      _nested = reset = => _nested = reset # reset _nested
+
+
+      # delaying child state updates
+      delay_nested = (f)=>
+        do schedule
+        _nested = do (_nested)=>=> do _nested; do f; return
+        return
 
 
       # recursive statue if there nested actions
       for k, v of state_actions when v._
-        _state[k] = statue v, delayed, do (k)=>(new_v)=> # closure for k
-          update_state [k]: new_v
+        _state[k] = statue v, delay_nested, do (k)=>(sub_state)=> # closure for k
+          _state[k] = sub_state # executes as _nested
 
 
+      # saving new state in closure
       save_state = (state)=>
-        # saving new state in closure
+        do schedule
         _state = state
 
+
+      schedule = =>
         unless _scheduled
           _scheduled = true
           # lazy parent update
-          delayed =>
-            _scheduled = false
-            nested_state = _state
-            _state = create null
-            # merging proto tree in plain object
-            _state[k] = v for k, v of nested_state
+          delayed update_parent
+        return
 
-            level_up _state
 
-        _state
+      update_parent = =>
+        _scheduled = false
+        proto_state = _state
+        _state = create null
+        # merging prototype chain state
+        _state[k] = proto_state[k] for k of proto_state
+        do _nested
 
+        level_up _state
+        return
 
 This function is a little overloaded, it's a getter/setter but
 also is a function wrapper.
@@ -164,11 +178,12 @@ easily detected
         cloned = create _state
         y = f x, cloned
 
-        for own k of cloned
-          # mutation detected
-          mutated = true
-          save_state cloned
-          break
+        for k of cloned
+          if cloned.hasOwnProperty k
+            # mutation detected
+            mutated = true
+            save_state cloned
+            break
 
         if is_function y
           # recursevely currying down
