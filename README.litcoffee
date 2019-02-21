@@ -110,8 +110,8 @@ parent update
 
       # delaying child state updates
       delay_nested = (f)=>
-        do schedule
         _nested = do (_nested)=>=> do _nested; do f; return
+        do schedule
         return
 
 
@@ -178,12 +178,11 @@ easily detected
         cloned = create _state
         y = f x, cloned
 
-        for k of cloned
-          if cloned.hasOwnProperty k
-            # mutation detected
-            mutated = true
-            save_state cloned
-            break
+        for own k of cloned
+          # mutation detected
+          mutated = true
+          save_state cloned
+          break
 
         if is_function y
           # recursevely currying down
