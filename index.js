@@ -124,7 +124,7 @@ module.exports = statue = (state_actions, delayed, level_up) => {
 // recursive statue if there nested actions
   for (k in state_actions) {
     v = state_actions[k];
-    if (v._) {
+    if (v && v._) {
       _state[k] = statue(v, delay_nested, ((k) => {
         return (sub_state) => { // closure for k
           return _state[k] = sub_state; // executes as _nested

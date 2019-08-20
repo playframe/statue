@@ -116,7 +116,7 @@ parent update
 
 
       # recursive statue if there nested actions
-      for k, v of state_actions when v._
+      for k, v of state_actions when v and v._
         _state[k] = statue v, delay_nested, do (k)=>(sub_state)=> # closure for k
           _state[k] = sub_state # executes as _nested
 
